@@ -1,0 +1,55 @@
+version: '3.3'
+
+services:
+
+  php:
+    container_name: payment_php
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - .:/var/www/payment:delegated
+    ports:
+      - "9000:9000"
+    networks:
+      - payment
+      - bridge
+
+  nginx:
+    container_name: payment_nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - "81:80"
+      - "443:443"
+    depends_on:
+      - php
+    networks:
+      - payment
+      - bridge
+    volumes:
+      - ./public:/var/www/payment/public
+      - ./var/log/nginx:/var/log/nginx
+
+  db:
+    image: postgres:latest
+    container_name: payment_db
+    env_file:
+      - .env.local
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./var/postgres/data:/var/lib/postgresql/data:rw
+    networks:
+      - payment
+      - bridge
+
+networks:
+  bridge:
+    external:
+      name: internal_bridge
+  payment:
+    driver: "bridge"
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
