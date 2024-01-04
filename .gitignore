@@ -2,6 +2,7 @@
 /env.local
 /vendor/
 /.idea/
+.idea
 
 ###> symfony/framework-bundle ###
 /.env.local
