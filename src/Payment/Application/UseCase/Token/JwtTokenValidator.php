@@ -9,16 +9,14 @@ use App\Payment\Application\Exception\UnauthorizedException;
 use App\Payment\Model\ReadPaymentStorage;
 use Firebase\JWT\BeforeValidException;
 use Firebase\JWT\ExpiredException;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
+use UnexpectedValueException;
 
-final class JwtTokenValidator
+final readonly class JwtTokenValidator
 {
-    private const ALGORITHM_HS256 = 'HS256';
-
     public function __construct(
-        private readonly ReadPaymentStorage $readPaymentStorage
+        private ReadPaymentStorage $readPaymentStorage,
+        private JwtTokenDecoder $tokenDecoder
     ) {
     }
 
@@ -28,20 +26,29 @@ final class JwtTokenValidator
      */
     public function validateToken(string $token, string $secretKey, int $allowedClockSkewInSeconds = 99999): void
     {
+        $tokenPayload = $this->decodeToken(token: $token, secretKey: $secretKey);
+        $this->validatePlayerId($tokenPayload->playerId);
+        $this->validateTokenExpiration($tokenPayload->expired, $allowedClockSkewInSeconds);
+    }
+
+    /**
+     * @throws InvalidTokenException
+     */
+    private function decodeToken(string $token, string $secretKey): TokenPayload
+    {
         $tokenWithoutBearer = str_replace('Bearer ', '', $token);
 
         try {
-            $payloadObject = JWT::decode($tokenWithoutBearer, new Key($secretKey, self::ALGORITHM_HS256));
+            return $this->tokenDecoder->decode(token: $tokenWithoutBearer, secretKey: $secretKey);
         } catch (SignatureInvalidException $e) {
             throw new InvalidTokenException('Invalid signature', 0, $e);
         } catch (BeforeValidException $e) {
             throw new InvalidTokenException('Token is not yet valid', 0, $e);
         } catch (ExpiredException $e) {
             throw new InvalidTokenException('Expired token', 0, $e);
+        } catch (UnexpectedValueException $e) {
+            throw new InvalidTokenException('Invalid token', 0, $e);
         }
-
-        $this->validatePlayerId($payloadObject->playerId);
-        $this->validateTokenExpiration($payloadObject->exp, $allowedClockSkewInSeconds);
     }
 
     /**

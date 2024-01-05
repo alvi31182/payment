@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Payment\Application\Dto\Request;
+namespace App\Payment\Application\Request;
 
 use OpenApi\Attributes as OA;
 

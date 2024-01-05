@@ -23,4 +23,4 @@ services:
         arguments:
             $secretKey: '%jwt.secret.key%'
         tags:
-            - { name: kernel.event_listener, event: kernel.request}
+            - { name: kernel.event_listener, event: kernel.request, priority: 20}

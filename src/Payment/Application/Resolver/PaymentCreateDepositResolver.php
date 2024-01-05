@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Payment\Application\Resolver;
 
-use App\Payment\Application\Dto\Request\CreateDeposit;
+use App\Payment\Application\Request\CreateDeposit;
 use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
@@ -34,10 +34,10 @@ final class PaymentCreateDepositResolver implements ValueResolverInterface
         );
 
 
-        return [new CreateDeposit(
+        yield new CreateDeposit(
             amount: $requestData['amount'],
             currency: $requestData['currency'],
             playerId: $requestData['playerId']
-        )];
+        );
     }
 }

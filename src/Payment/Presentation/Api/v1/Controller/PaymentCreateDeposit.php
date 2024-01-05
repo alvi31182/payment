@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Payment\Presentation\Api\v1\Controller;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
-use App\Payment\Application\Dto\Request\CreateDeposit;
+use App\Payment\Application\Request\CreateDeposit;
 use App\Payment\Application\Resolver\PaymentCreateDepositResolver;
 use App\Payment\Application\UseCase\Create\PaymentDepositCreateProcessor;
 use Nelmio\ApiDocBundle\Annotation\Model;
