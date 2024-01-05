@@ -15,7 +15,6 @@ class Money
         private int $amount,
         #[ORM\Column(type: 'string', nullable: false)]
         private string $currency
-    )
-    {
+    ) {
     }
 }

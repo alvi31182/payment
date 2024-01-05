@@ -2,8 +2,18 @@ nelmio_api_doc:
     documentation:
         info:
             title: Payment
-            description: This is an awesome app!
+            description: Payment service!
             version: 1.0.0
+        security:
+            - Bearer: [ ]
+        components:
+            securitySchemes:
+                Bearer:
+                    type: apiKey
+                    description: "Value: Bearer {jwt}"
+                    name: X-Auth-Token
+                    in: header
+
     areas: # to filter documented areas
         path_patterns:
-            - ^/Api(?!/doc$) # Accepts routes under /Api except /Api/doc
+            - ^/api(?!/doc$) # Accepts routes under /Api except /Api/doc

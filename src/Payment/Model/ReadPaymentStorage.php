@@ -6,5 +6,4 @@ namespace App\Payment\Model;
 
 interface ReadPaymentStorage
 {
-
 }

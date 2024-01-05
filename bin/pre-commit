@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /var/www/lottery
+cd /var/www/payment
 
 #./vendor/bin/phpunit
 #

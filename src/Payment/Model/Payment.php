@@ -24,7 +24,6 @@ class Payment
         private int $createdAt,
         #[ORM\Column(type: 'timestamp', nullable: true)]
         private ?int $updatedAt
-    )
-    {
+    ) {
     }
 }

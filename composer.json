@@ -27,7 +27,8 @@
         "symfony/twig-bundle": "^7.0",
         "symfony/dependency-injection": "^7.0",
         "ramsey/uuid": "^4.7",
-        "ramsey/uuid-doctrine": "^2.0"
+        "ramsey/uuid-doctrine": "^2.0",
+        "firebase/php-jwt": "^6.10"
     },
     "config": {
         "allow-plugins": {

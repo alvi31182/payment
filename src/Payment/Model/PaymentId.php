@@ -15,21 +15,21 @@ use Ramsey\Uuid\UuidInterface;
 class PaymentId
 {
     /* @var non-empty-string */
-    private const string UUID_VERSION = '7';
+    private const UUID_VERSION = '7';
 
     public function __construct(
         #[ORM\Id]
         #[ORM\Column(type: 'uuid', unique: true, nullable: false)]
         #[ORM\GeneratedValue(strategy: 'CUSTOM')]
         #[ORM\CustomIdGenerator(class: UuidV7Generator::class)]
-        private UuidInterface|string $id
+        private UuidInterface $id
     ) {
         $this->validateUuid(uuid: $this->id->toString());
     }
 
     public function getId(): string
     {
-        return $this->id;
+        return $this->id->toString();
     }
 
     public static function generateUuidV7(): self

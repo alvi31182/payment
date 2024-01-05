@@ -8,19 +8,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Embeddable;
 use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
 
 #[Embeddable]
 class PlayerId
 {
     /* @var non-empty-string */
-    private const string UUID_VERSION = '7';
+    private const UUID_VERSION = '7';
 
     public function __construct(
         #[ORM\Column(type: 'uuid', unique: true, nullable: false)]
         private string $playerId
-    )
-    {
+    ) {
         $this->validateUuid(uuid: $this->playerId);
     }
 
