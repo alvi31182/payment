@@ -16,7 +16,7 @@ final readonly class CreateDeposit
     public function __construct(
         #[OA\Property(type: 'string', nullable: false)]
         public string $amount,
-        #[OA\Property(type: 'string', pattern: '^[\'"]?[A-Z]{3}[\'"]?$', nullable: false)]
+        #[OA\Property(type: 'string', nullable: false)]
         public string $currency,
         #[OA\Property(type: 'string', nullable: false)]
         public string $playerId

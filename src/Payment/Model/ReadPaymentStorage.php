@@ -6,4 +6,5 @@ namespace App\Payment\Model;
 
 interface ReadPaymentStorage
 {
+    public function isPlayerIdExists(string $playerId): bool;
 }

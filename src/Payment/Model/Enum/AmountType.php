@@ -7,4 +7,5 @@ namespace App\Payment\Model\Enum;
 enum AmountType: string
 {
     case DEPOSIT = 'deposit';
+    case WITHDRAWAL = 'withdrawal';
 }

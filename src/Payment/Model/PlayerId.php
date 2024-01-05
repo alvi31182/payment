@@ -16,7 +16,7 @@ class PlayerId
     private const UUID_VERSION = '7';
 
     public function __construct(
-        #[ORM\Column(type: 'uuid', unique: true, nullable: false)]
+        #[ORM\Column(type: 'uuid', unique: false, nullable: false)]
         private string $playerId
     ) {
         $this->validateUuid(uuid: $this->playerId);

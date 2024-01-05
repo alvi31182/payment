@@ -11,8 +11,8 @@ use Doctrine\ORM\Mapping\Embeddable;
 class Money
 {
     public function __construct(
-        #[ORM\Column(type: 'integer', nullable: false)]
-        private int $amount,
+        #[ORM\Column(type: 'string', nullable: false)]
+        private string $amount,
         #[ORM\Column(type: 'string', nullable: false)]
         private string $currency
     ) {

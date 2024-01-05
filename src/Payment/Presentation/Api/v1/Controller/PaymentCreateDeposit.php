@@ -6,10 +6,12 @@ namespace App\Payment\Presentation\Api\v1\Controller;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
 use App\Payment\Application\Dto\Request\CreateDeposit;
-use App\Payment\Application\Resolver\Create\PaymentCreateDepositResolver;
+use App\Payment\Application\Resolver\PaymentCreateDepositResolver;
+use App\Payment\Application\UseCase\Create\PaymentDepositCreateProcessor;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,7 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PaymentCreateDeposit extends AbstractController
 {
     public function __construct(
-        private readonly CreatePaymentDepositCommand $command
+        private readonly PaymentDepositCreateProcessor $createProcessor
     ) {
     }
 
@@ -31,11 +33,23 @@ final class PaymentCreateDeposit extends AbstractController
             )
         )
     )]
-    public function __invoke(
+    #[Security(name: 'Bearer')]
+    public function createDeposit(
         #[MapRequestPayload(
             resolver: PaymentCreateDepositResolver::class
-        )] CreateDeposit $request,
+        )] CreateDeposit $request
     ): JsonResponse {
-        return new JsonResponse();
+
+        $this->createProcessor->execute(
+            new CreatePaymentDepositCommand(
+                amount: $request->amount,
+                currency: $request->currency,
+                playerId: $request->playerId
+            )
+        );
+
+        return new JsonResponse([
+            'success' => JsonResponse::HTTP_CREATED,
+        ]);
     }
 }

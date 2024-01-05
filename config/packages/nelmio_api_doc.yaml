@@ -5,15 +5,50 @@ nelmio_api_doc:
             description: Payment service!
             version: 1.0.0
         security:
-            - Bearer: [ ]
+            - bearerAuth: [ ]
         components:
             securitySchemes:
-                Bearer:
-                    type: apiKey
-                    description: "Value: Bearer {jwt}"
-                    name: X-Auth-Token
-                    in: header
+                bearerAuth:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+            schemas:
+                general_error:
+                    title: "General error"
+                    description: "General exception"
+                    type: object
+                    properties:
+                        errors:
+                            type: array
+                            items:
+                                type: object
+                                properties:
+                                    status:
+                                        type: integer
+                                        readOnly: true
+                                        description: Error status code
+                                    title:
+                                        type: string
+                                        readOnly: true
+                                        description: Error title
+                                    details:
+                                        type: string
+                                        readOnly: true
+                                        description: Error details
+            responses:
+                AccessDenied:
+                    description: Access denied
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/general_error"
+                Unauthorized:
+                    description: Unauthorized
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/general_error"
 
-    areas: # to filter documented areas
+    areas:
         path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /Api except /Api/doc
+            - ^/api(?!/doc$)
