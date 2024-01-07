@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Payment\Model;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
