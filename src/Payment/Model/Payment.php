@@ -7,6 +7,8 @@ namespace App\Payment\Model;
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
 use App\Payment\Infrastructure\Doctrine\Repository\PaymentRepository;
 use App\Payment\Model\Enum\AmountType;
+use App\Payment\Model\Event\DomainEventRoot;
+use App\Payment\Model\Event\PaymentCreated;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
@@ -17,7 +19,7 @@ use Doctrine\ORM\Mapping\Index;
     name: 'btree_payment_player_idx',
     options: ['using' => 'btree']
 )]
-class Payment
+class Payment extends DomainEventRoot
 {
     public function __construct(
         #[ORM\Embedded(class: PaymentId::class, columnPrefix: false)]
@@ -37,7 +39,7 @@ class Payment
 
     public static function createDeposit(CreatePaymentDepositCommand $command): self
     {
-        return new self(
+        $payment = new self(
             id: PaymentId::generateUuidV7(),
             money: new Money(
                 amount: $command->amount,
@@ -48,6 +50,14 @@ class Payment
             createdAt: (new DateTimeImmutable()),
             updatedAt: null
         );
+
+        $payment->recordEvent(domainEvent: new PaymentCreated(
+            id: $payment->getId()->getId(),
+            amount: $payment->getMoney()->getAmount(),
+            playerId: $payment->getPlayerId()->getId()
+        ));
+
+        return $payment;
     }
 
     /**
