@@ -6,8 +6,8 @@ namespace App\Payment\Application\UseCase\Authorization;
 
 use App\Payment\Application\Exception\InvalidTokenException;
 use App\Payment\Application\Exception\UnauthorizedException;
-use App\Payment\Application\UseCase\Token\JwtTokenGenerator;
-use App\Payment\Application\UseCase\Token\JwtTokenValidator;
+use App\Payment\Application\UseCase\TokenOperation\JwtTokenGenerator;
+use App\Payment\Application\UseCase\TokenOperation\JwtTokenValidator;
 
 final readonly class Authorize
 {

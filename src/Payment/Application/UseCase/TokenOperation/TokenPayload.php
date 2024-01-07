@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Payment\Application\UseCase\Token;
+namespace App\Payment\Application\UseCase\TokenOperation;
 
 final readonly class TokenPayload
 {

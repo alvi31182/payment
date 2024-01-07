@@ -13,8 +13,11 @@ use OpenApi\Attributes as OA;
 )]
 final readonly class CreateDeposit
 {
+    /**
+     * @param numeric-string $amount
+     */
     public function __construct(
-        #[OA\Property(type: 'string', nullable: false)]
+        #[OA\Property(type: 'string', format: 'numeric', nullable: false)]
         public string $amount,
         #[OA\Property(type: 'string', nullable: false)]
         public string $currency,

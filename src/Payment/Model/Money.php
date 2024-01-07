@@ -10,11 +10,27 @@ use Doctrine\ORM\Mapping\Embeddable;
 #[Embeddable]
 class Money
 {
+    /**
+     * @param numeric-string $amount
+     */
     public function __construct(
-        #[ORM\Column(type: 'string', nullable: false)]
+        #[ORM\Column(type: 'decimal', nullable: false)]
         private string $amount,
         #[ORM\Column(type: 'string', nullable: false)]
         private string $currency
     ) {
+    }
+
+    /**
+     * @return numeric-string
+     */
+    public function getAmount(): string
+    {
+        return $this->amount;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
     }
 }

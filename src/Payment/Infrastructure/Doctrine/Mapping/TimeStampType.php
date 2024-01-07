@@ -25,8 +25,10 @@ final class TimeStampType extends Type
     }
 
     /**
+     * @psalm-suppress MoreSpecificImplementedParamType
+     * @param DateTimeImmutable|null $value
+     *
      * @throws ConversionException
-     * @param DateTimeImmutable $value
      */
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): ?string
     {
