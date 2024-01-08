@@ -1,5 +1,7 @@
 {
     "name": "root/payment",
+    "description": "Payment service",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Alvi IS"
@@ -22,7 +24,7 @@
         "doctrine/orm": "^2.17",
         "doctrine/annotations": "^2.0",
         "doctrine/common": "^3.4",
-        "nelmio/api-doc-bundle": "v4.16.0",
+        "nelmio/api-doc-bundle": "^4.16.2",
         "symfony/asset": "^7.0",
         "twig/twig": "^3.8",
         "symfony/css-selector": "^7.0",
