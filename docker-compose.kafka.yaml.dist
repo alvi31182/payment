@@ -71,7 +71,7 @@ services:
     entrypoint:
         - /bin/bash
     volumes:
-      - ./docker/ksqldb-cli/sql:/etc/sql
+      - ./docker/ksqldb-cli/source-connector:/etc/sql
     tty: true
     networks:
       - payment
