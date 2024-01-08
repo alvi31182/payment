@@ -10,8 +10,9 @@ namespace App\Payment\Infrastructure\Persistence;
 interface TransactionProcessor
 {
     /**
-     * @param callable(): void $operation
+     * @param callable(): void $transaction
+     *
      * @return void
      */
-    public function transactional(callable $operation): void;
+    public function transactional(callable $transaction): void;
 }

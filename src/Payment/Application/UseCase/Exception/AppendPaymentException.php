@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Payment\Application\UseCase\UseCaseException;
+namespace App\Payment\Application\UseCase\Exception;
 
 use Exception;
 use Throwable;
