@@ -8,10 +8,21 @@ jobs:
     build:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v3
-        - name: Install Composer Dependencies
+        - name: Validate composer.json and composer.lock
+          run: composer validate
+        - name: Get composer cache directory
+          id: composer-cache
+          run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        - name: Cache composer dependencies
+          uses: actions/cache@v3
+          with:
+            path: ${{ steps.composer-cache.outputs.dir }}
+            key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+            restore-keys: ${{ runner.os }}-composer-
+        - name: Install Composer dependencies
+          run: composer install
           working-directory: ./
-          run: composer install --prefer-dist
+        - uses: actions/checkout@v3
         - name: Run Tests
           working-directory: ./
           run: composer run-phpunit
