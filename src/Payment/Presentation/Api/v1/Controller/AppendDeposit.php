@@ -8,7 +8,7 @@ use App\Payment\Application\Command\AddPaymentDepositCommand;
 use App\Payment\Application\Request\AppendDepositRequest;
 use App\Payment\Application\RequestResolver\AppendDepositValueResolver;
 use App\Payment\Application\UseCase\Deposit\AppendPaymentDepositProcessor;
-use App\Payment\Application\UseCase\UseCaseException\AppendPaymentException;
+use App\Payment\Application\UseCase\Exception\AppendPaymentException;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

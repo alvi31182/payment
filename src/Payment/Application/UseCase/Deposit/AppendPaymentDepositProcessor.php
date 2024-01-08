@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Payment\Application\UseCase\Deposit;
 
 use App\Payment\Application\Command\AddPaymentDepositCommand;
-use App\Payment\Application\UseCase\UseCaseException\AppendPaymentException;
+use App\Payment\Application\UseCase\Exception\AppendPaymentException;
 use App\Payment\Infrastructure\Persistence\TransactionProcessor;
 use App\Payment\Model\Exception\PaymentNotFoundException;
 use App\Payment\Model\ReadPaymentStorage;
@@ -35,7 +35,7 @@ final readonly class AppendPaymentDepositProcessor
                 throw new PaymentNotFoundException('Not found payment by player ID.');
             }
 
-            $this->transactionProcessor->transactional(operation: function () use ($payment, $command): void {
+            $this->transactionProcessor->transactional(transaction: function () use ($payment, $command): void {
                 $this->writePaymentStorage->appendDeposit(
                     $payment->appendDeposit(depositAmount: $command->appendAmount)
                 );

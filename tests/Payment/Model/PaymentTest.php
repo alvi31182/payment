@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Payment\Model;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
+use App\Payment\Application\Converter\Money\MoneyConverter;
 use App\Payment\Model\Event\PaymentCreated;
 use App\Payment\Model\Payment;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,9 @@ class PaymentTest extends TestCase
             playerId: Uuid::uuid7()->toString()
         );
 
-        $payment = Payment::createDeposit($command);
+        $pennies = MoneyConverter::convertToNumeric($command->amount);
+
+        $payment = Payment::createDeposit($command, $pennies);
 
         $pullDomainEvents = $payment->pullDomainEvents();
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Payment\Model\Event;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
+use App\Payment\Application\Converter\Money\MoneyConverter;
 use App\Payment\Model\Payment;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -19,7 +20,9 @@ class DomainEventRootTest extends TestCase
             playerId: Uuid::uuid7()->toString()
         );
 
-        $payment = Payment::createDeposit($command);
+        $pennies = MoneyConverter::convertToNumeric($command->amount);
+
+        $payment = Payment::createDeposit($command, $pennies);
 
         $events = $payment->pullDomainEvents();
 

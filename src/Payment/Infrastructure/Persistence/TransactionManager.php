@@ -20,16 +20,14 @@ readonly class TransactionManager implements TransactionProcessor
     }
 
     /**
-     * @param callable(): void $operation
-     *
-     * @return void
+     * @param callable(): void $transaction
      */
-    public function transactional(callable $operation): void
+    public function transactional(callable $transaction): void
     {
         $this->entityManager->beginTransaction();
 
         try {
-            $operation();
+            $transaction();
             $this->entityManager->flush();
             $this->entityManager->commit();
         } catch (Throwable $exception) {

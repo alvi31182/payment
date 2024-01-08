@@ -29,12 +29,12 @@ class PaymentWithdrawalProcessorTest extends TestCase
     {
         $playerId = '018ce31c-a470-7078-93c5-8ccfe56047e9';
         $withdrawalSum = "500.11";
-        dd(Uuid::uuid7()->toString());
+
         $payment = new Payment(
             id: new PaymentId(Uuid::fromString('018ce0a6-ce6b-7152-acd1-0a2f3a096747')),
             money: new Money('1000', 'RUB'),
             playerId: new PlayerId($playerId),
-            amountType: AmountType::DEPOSIT,
+            amountType: AmountType::WITHDRAWAL,
             createdAt: new DateTimeImmutable(),
             updatedAt: new DateTimeImmutable()
         );
@@ -46,11 +46,14 @@ class PaymentWithdrawalProcessorTest extends TestCase
 
         $writePaymentStorage = new TestWritePaymentStorage();
 
+        $transactionProcessor = new TransactionProcessorMock();
+
         $processor = new PaymentWithdrawalProcessor(
-            transactionProcessor: new TransactionProcessorMock(),
+            transactionProcessor: $transactionProcessor,
             readPaymentStorage: $readPaymentStorage,
             writePaymentStorage: $writePaymentStorage
         );
+
         $processor->execute(new WithdrawalCommand(withdrawalSum: $withdrawalSum, playerId: $playerId));
 
         $this->assertEquals(
