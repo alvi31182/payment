@@ -1,0 +1,102 @@
+version: '3.3'
+
+services:
+  kafka_payment:
+    image: confluentinc/cp-kafka:latest
+    hostname: payment_kafka
+    container_name: payment_kafka
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://payment_kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@payment_kafka:29093
+      KAFKA_LISTENERS: PLAINTEXT://payment_kafka:9092,CONTROLLER://payment_kafka:29093,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    networks:
+      - payment
+      - bridge
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.5.1
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - kafka_payment
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka_payment:9092
+    networks:
+      - payment
+      - bridge
+
+  ksqldb-server:
+    image: confluentinc/ksqldb-server:0.29.0
+    hostname: payment-ksqldb
+    container_name: payment-ksqldb
+    environment:
+      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
+    depends_on:
+      - kafka_payment
+    ports:
+      - "8088:8088"
+    command: bash -c "chmod +x /etc/ksqldb-server/run.sh && /etc/ksqldb-server/run.sh"
+    volumes:
+      - ./docker/ksqldb-server:/etc/ksqldb-server
+    networks:
+      - payment
+      - bridge
+
+  ksqldb-cli:
+    image: confluentinc/ksqldb-cli:0.29.0
+    hostname: payment-ksqlcli
+    container_name: payment-ksqlcli
+    depends_on:
+      - kafka_payment
+      - ksqldb-server
+    entrypoint:
+        - /bin/bash
+    volumes:
+      - ./docker/ksqldb-cli/sql:/etc/sql
+    tty: true
+    networks:
+      - payment
+      - bridge
+
+  kafka_payment_ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: payment-kafka-ui
+    ports:
+      - "8082:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: payment
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: payment_kafka:9092
+      KAFKA_CLUSTERS_0_READONLY: "false"
+    depends_on:
+      - kafka_payment
+    networks:
+      - payment
+      - bridge
+
+networks:
+  bridge:
+    external:
+      name: internal_bridge
+  payment:
+    driver: "bridge"
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
