@@ -10,6 +10,7 @@ use App\Payment\Application\RequestResolver\AppendDepositValueResolver;
 use App\Payment\Application\UseCase\Deposit\AppendPaymentDepositProcessor;
 use App\Payment\Application\UseCase\UseCaseException\AppendPaymentException;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,6 +40,7 @@ final class AppendDeposit extends AbstractController
             )
         )
     )]
+    #[Security(name: "ApiKeyAuth")]
     public function appendDeposit(
         #[MapRequestPayload(
             resolver: AppendDepositValueResolver::class

@@ -10,6 +10,7 @@ use App\Payment\Application\RequestResolver\WithdrawalValueResolver;
 use App\Payment\Application\UseCase\Withdrawal\PaymentWithdrawalProcessor;
 use App\Payment\Model\Exception\PaymentNotFoundException;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,6 +38,7 @@ final class PaymentWithdrawal extends AbstractController
             )
         )
     )]
+    #[Security(name: "ApiKeyAuth")]
     public function withdrawal(#[MapRequestPayload(
         resolver: WithdrawalValueResolver::class
     )]WithdrawalRequest $request): JsonResponse

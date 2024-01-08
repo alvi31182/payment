@@ -34,7 +34,7 @@ final class PaymentCreateDeposit extends AbstractController
             )
         )
     )]
-    #[Security(name: 'Bearer')]
+    #[Security(name: "ApiKeyAuth")]
     public function createDeposit(
         #[MapRequestPayload(
             resolver: CreateDepositValueResolver::class

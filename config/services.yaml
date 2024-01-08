@@ -16,7 +16,10 @@ services:
 
     App\Payment\Model\WritePaymentStorage:
         class: App\Payment\Infrastructure\Doctrine\Repository\PaymentRepository
-    App\Payment\Application\Resolver\ValueResolverProcess:
+
+    App\Payment\Application\Listener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
 
 
     App\Payment\Application\Listener\ActionListener:

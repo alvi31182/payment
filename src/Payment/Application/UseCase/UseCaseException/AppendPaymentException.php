@@ -9,8 +9,9 @@ use Throwable;
 
 final class AppendPaymentException extends Exception
 {
-    public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null)
+    public function __construct(string $message = "", ?Throwable $previous = null)
     {
+        $code = 404;
         parent::__construct($message, $code, $previous);
     }
 }
