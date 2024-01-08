@@ -16,5 +16,5 @@ jobs:
           working-directory: ./app
           run: composer run-phpunit
         - name: Stat Analyze
-          working-directory: ./payment
+          working-directory: ./app
           run: composer run-psalm
