@@ -10,11 +10,11 @@ jobs:
       steps:
         - uses: actions/checkout@v3
         - name: Install Composer Dependencies
-          working-directory: ./app
+          working-directory: ./
           run: composer install --prefer-dist
         - name: Run Tests
-          working-directory: ./app
+          working-directory: ./
           run: composer run-phpunit
         - name: Stat Analyze
-          working-directory: ./app
+          working-directory: ./
           run: composer run-psalm
