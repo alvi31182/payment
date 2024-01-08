@@ -2,24 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Payment\Application\Resolver;
+namespace App\Payment\Application\RequestResolver;
 
 use App\Payment\Application\Request\CreateDeposit;
-use Override;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
-final class PaymentCreateDepositResolver implements ValueResolverInterface
+final class CreateDepositValueResolver implements ValueResolverInterface
 {
     /**
      * @param Request          $request
      * @param ArgumentMetadata $argument
      *
-     * @return array<array-key, string>
+     * @return iterable<CreateDeposit>
      * @throws \JsonException
      */
-    #[Override] public function resolve(Request $request, ArgumentMetadata $argument): iterable
+    public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         $type = $argument->getType();
 

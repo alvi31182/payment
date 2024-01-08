@@ -29,9 +29,10 @@ final readonly class ActionListener
         $token = $request->headers->get('Authorization');
 
         if ($token === null) {
-            throw new UnauthorizedException(
-                'Unauthorized'
-            );
+            return;
+//            throw new UnauthorizedException(
+//                'Unauthorized'
+//            );
         }
 
         $this->authorize->tokenValidator(token: $token, secretKey: $this->secretKey);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Payment\Application\UseCase\Token;
+namespace App\Payment\Application\UseCase\TokenOperation;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;

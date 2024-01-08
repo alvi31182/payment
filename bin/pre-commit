@@ -2,12 +2,12 @@
 
 cd /var/www/payment
 
-#./vendor/bin/phpunit
-#
-#if [ $? -ne 0 ]; then
-#    echo "Запуск тестов не пройден. Коммит отклонен."
-#    exit 1
-#fi
+./vendor/bin/phpunit
+
+if [ $? -ne 0 ]; then
+    echo "Запуск тестов не пройден. Коммит отклонен."
+    exit 1
+fi
 
 ./vendor/bin/psalm
 

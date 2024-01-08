@@ -6,18 +6,19 @@ namespace App\Payment\Presentation\Api\v1\Controller;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
 use App\Payment\Application\Request\CreateDeposit;
-use App\Payment\Application\Resolver\PaymentCreateDepositResolver;
-use App\Payment\Application\UseCase\Create\PaymentDepositCreateProcessor;
+use App\Payment\Application\RequestResolver\CreateDepositValueResolver;
+use App\Payment\Application\UseCase\Deposit\PaymentDepositCreateProcessor;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route(path: '/api/v1/create')]
-#[OA\Tag(name: 'payment', description: 'create deposit')]
+#[OA\Tag(name: 'Payment', description: 'create deposit')]
 final class PaymentCreateDeposit extends AbstractController
 {
     public function __construct(
@@ -25,7 +26,7 @@ final class PaymentCreateDeposit extends AbstractController
     ) {
     }
 
-    #[Route(path: '', methods: ['POST'])]
+    #[Route(methods: ['POST'])]
     #[OA\Post(
         requestBody: new OA\RequestBody(
             content: new OA\JsonContent(
@@ -33,10 +34,10 @@ final class PaymentCreateDeposit extends AbstractController
             )
         )
     )]
-    #[Security(name: 'Bearer')]
+    #[Security(name: "ApiKeyAuth")]
     public function createDeposit(
         #[MapRequestPayload(
-            resolver: PaymentCreateDepositResolver::class
+            resolver: CreateDepositValueResolver::class
         )] CreateDeposit $request
     ): JsonResponse {
 
@@ -49,7 +50,7 @@ final class PaymentCreateDeposit extends AbstractController
         );
 
         return new JsonResponse([
-            'success' => JsonResponse::HTTP_CREATED,
+            'success' => Response::HTTP_CREATED,
         ]);
     }
 }
