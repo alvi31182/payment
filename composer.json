@@ -51,13 +51,13 @@
         }
     },
     "scripts": {
+        "run-phpunit": "vendor/bin/phpunit",
+        "run-psalm": "vendor/bin/psalm --no-cache",
+        "run-phpcf": "vendor/bin/phpcs",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
-        },
-        "run-phpunit": "vendor/bin/phpunit",
-        "run-psalm": "vendor/bin/psalm --no-cache",
-        "run-phpcf": "vendor/bin/phpcs"
+        }
     },
     "require-dev": {
         "symfony/stopwatch": "^7.0",
