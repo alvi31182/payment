@@ -6,6 +6,7 @@ namespace App\Payment\Application\UseCase\Deposit;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
 use App\Payment\Application\UseCase\ArgumentProcessor;
+use App\Payment\Infrastructure\Persistence\TransactionProcessor;
 use App\Payment\Model\Payment;
 use App\Payment\Model\ReadPaymentStorage;
 use App\Payment\Model\WritePaymentStorage;
@@ -16,6 +17,7 @@ use Throwable;
 final readonly class PaymentDepositCreateProcessor
 {
     public function __construct(
+        private TransactionProcessor $transactionProcessor,
         private WritePaymentStorage $writePaymentStorage,
         private ReadPaymentStorage $readPaymentStorage
     ) {
@@ -27,8 +29,12 @@ final readonly class PaymentDepositCreateProcessor
 
         if (!$player) {
             try {
-                $this->writePaymentStorage->createDeposit(
-                    Payment::createDeposit(command: $command)
+                $this->transactionProcessor->transactional(
+                    function () use ($command): void {
+                        $this->writePaymentStorage->createDeposit(
+                            Payment::createDeposit(command: $command)
+                        );
+                    }
                 );
             } catch (Throwable $exception) {
                 throw new RuntimeException(
