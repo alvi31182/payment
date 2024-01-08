@@ -3,6 +3,6 @@ CREATE SOURCE CONNECTOR `postgres-source` WITH(
     "connection.url"='jdbc:postgresql://db:5432/payment?user=user&password=pass',
     "mode"='timestamp',
     "timestamp.column.name"='created_at',
-    "topic.prefix"='payment_',
-    "table.whitelist"='v1.event',
+    "topic.prefix"='kafka_v1_',
+    "table.whitelist"='payment',
     "key"='id');
