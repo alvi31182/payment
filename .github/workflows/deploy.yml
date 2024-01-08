@@ -14,6 +14,7 @@ jobs:
 
       - name: Validate composer.json and composer.lock
         run: composer validate
+        working-directory: /
 
       - name: Get composer cache directory
         id: composer-cache
@@ -28,9 +29,12 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install
+        working-directory: /
 
       - name: Run Tests
         run: composer run-phpunit
+        working-directory: /
 
       - name: Stat Analyze
         run: composer run-psalm
+        working-directory: /
