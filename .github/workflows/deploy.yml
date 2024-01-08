@@ -28,11 +28,11 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Update Composer dependencies with all dependencies
-        run: composer update --with-all-dependencies
+        run: composer update
         working-directory: .
 
       - name: Install Composer dependencies
-        run: composer install
+        run: composer install --with-all-dependencies
         working-directory: .
 
       - name: Run Tests
