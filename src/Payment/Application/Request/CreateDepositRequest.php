@@ -11,7 +11,7 @@ use OpenApi\Attributes as OA;
     description: 'Create new Deposit in Payment service',
     required: ['amount', 'currency', 'playerId'],
 )]
-final readonly class CreateDeposit
+final readonly class CreateDepositRequest
 {
     /**
      * @param numeric-string $amount
@@ -21,7 +21,7 @@ final readonly class CreateDeposit
         public string $amount,
         #[OA\Property(type: 'string', nullable: false)]
         public string $currency,
-        #[OA\Property(type: 'string', nullable: false)]
+        #[OA\Property(type: 'string', format: 'uuid', nullable: false)]
         public string $playerId
     ) {
     }

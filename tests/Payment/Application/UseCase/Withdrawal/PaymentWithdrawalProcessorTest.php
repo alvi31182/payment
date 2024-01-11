@@ -23,7 +23,6 @@ use RuntimeException;
 class PaymentWithdrawalProcessorTest extends TestCase
 {
     /**
-     * @requires extension bcmath
      * @throws PaymentNotFoundException
      */
     public function testSuccessfulWithdrawal(): void
@@ -37,10 +36,11 @@ class PaymentWithdrawalProcessorTest extends TestCase
             playerId: new PlayerId($playerId),
             amountType: AmountType::WITHDRAWAL,
             createdAt: new DateTimeImmutable(),
-            updatedAt: null
+            updatedAt: new DateTimeImmutable()
         );
 
         $readPaymentStorage = new TestReadPaymentStorage(
+            data: [],
             payment: $payment
         );
 

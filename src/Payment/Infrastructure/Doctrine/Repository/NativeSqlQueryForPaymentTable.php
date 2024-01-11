@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Payment\Infrastructure\Doctrine\Repository;
 
+use App\Payment\Application\Response\PlayerAmount;
 use App\Payment\Infrastructure\Exception\ReadPaymentQueryException;
 use App\Payment\Infrastructure\Exception\UpdateDepositException;
 use App\Payment\Model\PlayerId;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
 use PDO;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -21,6 +23,10 @@ final class NativeSqlQueryForPaymentTable
     ) {
     }
 
+    /**
+     * @throws ReadPaymentQueryException
+     * @throws Exception
+     */
     public function isPlayerIdExists(PlayerId $playerId): bool
     {
         $connection = $this->entityManager->getConnection();
@@ -118,6 +124,50 @@ SQL;
         } catch (Throwable $exception) {
             $connection->rollBack();
             throw new UpdateDepositException($exception->getMessage());
+        }
+    }
+
+
+    public function getAmountByPlayerId(PlayerId $playerId): PlayerAmount
+    {
+        $connection = $this->entityManager->getConnection();
+        try {
+            $SQL = <<<SQL
+                SELECT 
+                    id, 
+                    amount, 
+                    player_id, 
+                    currency
+                FROM payment WHERE player_id = :playerId
+SQL;
+            $playerAmount = $connection->executeQuery(
+                sql: $SQL,
+                params: [
+                    'playerId' => $playerId->getId(),
+                ],
+                types: [
+                    'playerId' => PDO::PARAM_STR,
+                ]
+            )->fetchAssociative();
+
+            /**
+             * @var array{
+             *     id: string,
+             *     player_id: string,
+             *     amount: string,
+             *     currency: string
+             * } $playerAmount
+             */
+            return new PlayerAmount(
+                paymentId: $playerAmount['id'],
+                playerId: $playerAmount['player_id'],
+                amount: $playerAmount['amount'],
+                currency: $playerAmount['currency']
+            );
+        } catch (Throwable $exception) {
+            throw new DomainException(
+                message: $exception->getMessage(),
+            );
         }
     }
 }
