@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Payment\Application\RequestResolver;
 
-use App\Payment\Application\Request\CreateDeposit;
+use App\Payment\Application\Request\CreateDepositRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -15,7 +15,7 @@ final class CreateDepositValueResolver implements ValueResolverInterface
      * @param Request          $request
      * @param ArgumentMetadata $argument
      *
-     * @return iterable<CreateDeposit>
+     * @return iterable<CreateDepositRequest>
      * @throws \JsonException
      */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
@@ -33,7 +33,7 @@ final class CreateDepositValueResolver implements ValueResolverInterface
         );
 
 
-        yield new CreateDeposit(
+        yield new CreateDepositRequest(
             amount: $requestData['amount'],
             currency: $requestData['currency'],
             playerId: $requestData['playerId']

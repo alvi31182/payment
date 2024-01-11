@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Payment\Presentation\Api\v1\Controller;
 
 use App\Payment\Application\Command\CreatePaymentDepositCommand;
-use App\Payment\Application\Request\CreateDeposit;
+use App\Payment\Application\Request\CreateDepositRequest;
 use App\Payment\Application\RequestResolver\CreateDepositValueResolver;
 use App\Payment\Application\UseCase\Deposit\PaymentDepositCreateProcessor;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -30,7 +30,7 @@ final class PaymentCreateDeposit extends AbstractController
     #[OA\Post(
         requestBody: new OA\RequestBody(
             content: new OA\JsonContent(
-                ref: new Model(type: CreateDeposit::class)
+                ref: new Model(type: CreateDepositRequest::class)
             )
         )
     )]
@@ -38,7 +38,7 @@ final class PaymentCreateDeposit extends AbstractController
     public function createDeposit(
         #[MapRequestPayload(
             resolver: CreateDepositValueResolver::class
-        )] CreateDeposit $request
+        )] CreateDepositRequest $request
     ): JsonResponse {
 
         $this->createProcessor->execute(

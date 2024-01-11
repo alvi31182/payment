@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Payment\Application\UseCase\Withdrawal;
 
 use App\Payment\Application\Command\WithdrawalCommand;
+use App\Payment\Infrastructure\Persistence\TransactionProcessor;
 use App\Payment\Model\Exception\PaymentNotFoundException;
 use App\Payment\Model\ReadPaymentStorage;
 use App\Payment\Model\WritePaymentStorage;
@@ -15,6 +16,7 @@ use function bccomp;
 final readonly class PaymentWithdrawalProcessor
 {
     public function __construct(
+        private TransactionProcessor $transactionProcessor,
         private ReadPaymentStorage $readPaymentStorage,
         private WritePaymentStorage $writePaymentStorage
     ) {
@@ -39,9 +41,12 @@ final readonly class PaymentWithdrawalProcessor
                 . $payment->getMoney()->getAmount()
             );
         }
-
-        $this->writePaymentStorage->withdrawal(
-            payment: $payment->withdrawal(withdrawalAmount: $command->withdrawalSum)
+        $this->transactionProcessor->transactional(
+            operation: function () use ($payment, $command): void {
+                $this->writePaymentStorage->withdrawal(
+                    payment: $payment->withdrawal(withdrawalAmount: $command->withdrawalSum)
+                );
+            }
         );
     }
 }

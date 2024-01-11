@@ -12,6 +12,7 @@ use App\Payment\Model\Money;
 use App\Payment\Model\Payment;
 use App\Payment\Model\PaymentId;
 use App\Payment\Model\PlayerId;
+use App\Tests\Payment\Infrastructure\Persistence\TransactionProcessorMock;
 use App\Tests\Payment\Model\TestReadPaymentStorage;
 use App\Tests\Payment\Model\TestWritePaymentStorage;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +23,6 @@ use RuntimeException;
 class PaymentWithdrawalProcessorTest extends TestCase
 {
     /**
-     * @requires extension bcmath
      * @throws PaymentNotFoundException
      */
     public function testSuccessfulWithdrawal(): void
@@ -36,16 +36,21 @@ class PaymentWithdrawalProcessorTest extends TestCase
             playerId: new PlayerId($playerId),
             amountType: AmountType::DEPOSIT,
             createdAt: new DateTimeImmutable(),
-            updatedAt: null
+            updatedAt: new DateTimeImmutable()
         );
 
         $readPaymentStorage = new TestReadPaymentStorage(
+            data: [],
             payment: $payment
         );
 
         $writePaymentStorage = new TestWritePaymentStorage();
 
-        $processor = new PaymentWithdrawalProcessor($readPaymentStorage, $writePaymentStorage);
+        $processor = new PaymentWithdrawalProcessor(
+            transactionProcessor: new TransactionProcessorMock(),
+            readPaymentStorage: $readPaymentStorage,
+            writePaymentStorage: $writePaymentStorage
+        );
         $processor->execute(new WithdrawalCommand(withdrawalSum: $withdrawalSum, playerId: $playerId));
 
         $this->assertEquals(
@@ -72,10 +77,11 @@ class PaymentWithdrawalProcessorTest extends TestCase
             updatedAt: null
         );
 
-        $readPaymentStorage = new TestReadPaymentStorage(payment: $payment);
+        $readPaymentStorage = new TestReadPaymentStorage(data: [], payment: $payment);
         $writePaymentStorage = new TestWritePaymentStorage();
 
         $processor = new PaymentWithdrawalProcessor(
+            transactionProcessor: new TransactionProcessorMock(),
             readPaymentStorage: $readPaymentStorage,
             writePaymentStorage: $writePaymentStorage
         );

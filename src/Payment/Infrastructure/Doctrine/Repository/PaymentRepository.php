@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Payment\Infrastructure\Doctrine\Repository;
 
+use App\Payment\Application\Response\PlayerAmount;
 use App\Payment\Infrastructure\Exception\ReadPaymentQueryException;
 use App\Payment\Model\Payment;
 use App\Payment\Model\PlayerId;
@@ -44,6 +45,11 @@ final class PaymentRepository extends EntityRepository implements ReadPaymentSto
         $this->getEntityManager()->persist($payment);
     }
 
+    public function getAmountByPlayerId(string $playerId): PlayerAmount
+    {
+        return $this->sqlQueryForPaymentTable->getAmountByPlayerId(new PlayerId($playerId));
+    }
+
     public function findPaymentByPlayerId(string $playerId): ?Payment
     {
         return $this->findOneBy(['playerId.playerId' => $playerId]);
@@ -51,6 +57,7 @@ final class PaymentRepository extends EntityRepository implements ReadPaymentSto
 
     /**
      * @throws ReadPaymentQueryException
+     * @throws Exception
      */
     public function isPlayerIdExists(string $playerId): bool
     {
