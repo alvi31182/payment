@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-./vendor/bin/psalm
+./vendor/bin/psalm --no-cache
 
 if [ $? -ne 0 ]; then
     echo "Проверка Psalm не пройдена. Коммит отклонен."
