@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace App\Payment\Application\Converter\Money;
 
-class MoneyConverter
+use function bcmul;
+
+final class MoneyConverter
 {
     private const PENNIES = "100";
 
     /**
      * @param numeric-string $amount
+     * @return numeric-string
      */
-    public static function convertToBaseUnit(string $amount): int
+    public static function convertToNumeric(string $amount): string
     {
-        return (int) bcmul($amount, self::PENNIES, 2);
+        return bcmul($amount, self::PENNIES, 2);
     }
 
-    public static function convertToCurrency(int $amount): string
+    public static function convertToStringMoney(int $amount): string
     {
-        $format = number_format($amount, 2, '.', ' ');
-        dd($format);
+        return 'e';
     }
 }

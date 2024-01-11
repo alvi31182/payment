@@ -41,8 +41,9 @@ final readonly class PaymentWithdrawalProcessor
                 . $payment->getMoney()->getAmount()
             );
         }
+
         $this->transactionProcessor->transactional(
-            operation: function () use ($payment, $command): void {
+            function () use ($command, $payment): void {
                 $this->writePaymentStorage->withdrawal(
                     payment: $payment->withdrawal(withdrawalAmount: $command->withdrawalSum)
                 );

@@ -7,13 +7,12 @@ namespace App\Tests\Payment\Infrastructure\Persistence;
 use App\Payment\Infrastructure\Persistence\TransactionProcessor;
 
 /**
- * @template T
- * @implements TransactionProcessor<T>
+ * @psalm-suppress MissingTemplateParam
  */
 class TransactionProcessorMock implements TransactionProcessor
 {
-    public function transactional(callable $operation): void
+    public function transactional(callable $transaction): void
     {
-        $operation();
+        $transaction();
     }
 }

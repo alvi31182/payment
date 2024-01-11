@@ -37,12 +37,15 @@ class Payment extends DomainEventRoot
     ) {
     }
 
-    public static function createDeposit(CreatePaymentDepositCommand $command): self
+    /**
+     * @param numeric-string $pennies
+     */
+    public static function createDeposit(CreatePaymentDepositCommand $command, string $pennies): self
     {
         $payment = new self(
             id: PaymentId::generateUuidV7(),
             money: new Money(
-                amount: $command->amount,
+                amount: $pennies,
                 currency: $command->currency
             ),
             playerId: new PlayerId($command->playerId),
@@ -65,10 +68,19 @@ class Payment extends DomainEventRoot
      */
     public function appendDeposit(string $depositAmount): self
     {
-        $newAmount = bcadd(num1: $this->getMoney()->getAmount(), num2: $depositAmount, scale: 2);
-        $this->money = new Money($newAmount, $this->getMoney()->getCurrency());
+        $newAmount = bcadd(
+            num1: $this->getMoney()->getAmount(),
+            num2: $depositAmount,
+            scale: 2
+        );
+
+        $this->money = new Money(
+            amount: $newAmount,
+            currency: $this->getMoney()->getCurrency()
+        );
+
         $this->amountType = AmountType::DEPOSIT;
-        $this->updatedAt = new DateTimeImmutable('now');
+        $this->updatedAt = new DateTimeImmutable();
         return $this;
     }
 
@@ -77,10 +89,19 @@ class Payment extends DomainEventRoot
      */
     public function withdrawal(string $withdrawalAmount): self
     {
-        $newAmount = bcsub(num1: $this->getMoney()->getAmount(), num2: $withdrawalAmount, scale: 2);
-        $this->money = new Money($newAmount, $this->getMoney()->getCurrency());
+        $newAmount = bcsub(
+            num1: $this->getMoney()->getAmount(),
+            num2: $withdrawalAmount,
+            scale: 2
+        );
+
+        $this->money = new Money(
+            amount: $newAmount,
+            currency: $this->getMoney()->getCurrency()
+        );
+
         $this->amountType = AmountType::WITHDRAWAL;
-        $this->updatedAt = new DateTimeImmutable('now');
+        $this->updatedAt = new DateTimeImmutable();
         return $this;
     }
 
