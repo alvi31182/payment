@@ -31,6 +31,8 @@ services:
     volumes:
       - ./public:/var/www/payment/public
       - ./var/log/nginx:/var/log/nginx
+      - ./docker/nginx/localhost.pem:/etc/ssl/certs/localhost.pem
+      - ./docker/nginx/localhost-key.pem:/etc/ssl/private/localhost-key.pem
 
   db:
     image: postgres:latest
