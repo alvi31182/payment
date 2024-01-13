@@ -140,6 +140,14 @@ SQL;
                     currency
                 FROM payment WHERE player_id = :playerId
 SQL;
+            /**
+             * @var array{
+             *     id: string,
+             *     player_id: string,
+             *     amount: string,
+             *     currency: string
+             * } $playerAmount
+             */
             $playerAmount = $connection->executeQuery(
                 sql: $SQL,
                 params: [
@@ -150,14 +158,7 @@ SQL;
                 ]
             )->fetchAssociative();
 
-            /**
-             * @var array{
-             *     id: string,
-             *     player_id: string,
-             *     amount: string,
-             *     currency: string
-             * } $playerAmount
-             */
+
             return new PlayerAmount(
                 paymentId: $playerAmount['id'],
                 playerId: $playerAmount['player_id'],

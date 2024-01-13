@@ -21,6 +21,8 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
+    App\Notify\Infrastructure\Transport\KafkaTransportFactory:
+        tags: [messenger.transport_factory]
 
     App\Payment\Application\Listener\ActionListener:
         arguments:

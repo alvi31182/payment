@@ -9,10 +9,16 @@
     findUnusedCode="true"
 >
     <issueHandlers>
+        <UndefinedClass errorLevel="info">
+            <errorLevel type="suppress">
+                <referencedClass name="RdKafka\Message" />
+                <referencedClass name="RdKafka\Exception" />
+            </errorLevel>
+        </UndefinedClass>
         <UnusedProperty errorLevel="info" />
         <UnusedParam errorLevel="info" />
-        <PropertyNotSetInConstructor errorLevel="info" />
         <UnusedClass errorLevel="info" />
+        <PropertyNotSetInConstructor errorLevel="info" />
         <PossiblyUnusedMethod errorLevel="info" />
         <MissingTemplateParam errorLevel="info" />
         <ImplementedReturnTypeMismatch errorLevel="info" />

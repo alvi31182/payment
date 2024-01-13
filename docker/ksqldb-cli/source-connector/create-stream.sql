@@ -1,5 +1,5 @@
 --RUN SCRIPT /etc/sql/source_connectors.sql;
-
+--docker exec -it payment-ksqlcli  ksql http://ksqldb-server:8088
 CREATE STREAM payment_views(
        id VARCHAR,
        player_id VARCHAR,
