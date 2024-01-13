@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route(path: '/api/v1/appendDeposit')]
+#[Route(path: '/api/v1/append')]
 #[OA\Tag(name: 'Payment', description: 'append deposit')]
 final class AppendDeposit extends AbstractController
 {

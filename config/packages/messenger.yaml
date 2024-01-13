@@ -1,22 +1,17 @@
 framework:
     messenger:
-        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
-        # failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            # async: '%env(MESSENGER_TRANSPORT_DSN)%'
-            # failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
 
-        routing:
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async
-
-# when@test:
-#    framework:
-#        messenger:
-#            transports:
-#                # replace with your transport name here (e.g., my_transport: 'in-memory://')
-#                # For more Messenger testing tools, see https://github.com/zenstruck/messenger-test
-#                async: 'in-memory://'
+            kafka_consumer:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    kafka_broker: '%env(KAFKA_BROKER_LIST)%'
+                    kafka_topic_prefix: '%env(KAFKA_TOPIC_PREFIX)%'
+                    group_id: '%env(KAFKA_GROUP_ID)%'
+                    consumer_topics:
+                        - 'kafka_v1_payment'
+#
+#
+#        routing:
+#             'App\Notify\Infrastructure\Transport\KafkaMessage': async
