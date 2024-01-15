@@ -30,11 +30,14 @@ final readonly class KafkaReceiver implements ReceiverInterface
     /**
      * @psalm-suppress UndefinedConstant
      * @return \Generator<Envelope>
+     * @throws \RdKafka\Exception
      */
     public function get(): iterable
     {
         $consumer = $this->kafkaConsumer()->consumeFromKafka();
+
         $message = $consumer->consume(timeout_ms: 2_000);
+
         switch ($message->err) {
             case RD_KAFKA_RESP_ERR_NO_ERROR:
                 $envelope = $this->serializer->decode(
