@@ -33,7 +33,9 @@
         "firebase/php-jwt": "^6.10",
         "symfony/serializer": "^7.0",
         "symfony/messenger": "^7.0",
-        "kwn/php-rdkafka-stubs": "^2.2"
+        "kwn/php-rdkafka-stubs": "^2.2",
+        "react/async": "^4.1.0",
+        "react/child-process": "^0.6.5"
     },
     "config": {
         "allow-plugins": {

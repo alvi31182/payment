@@ -4,6 +4,7 @@ doctrine:
         types:
             timestamp: App\Payment\Infrastructure\Doctrine\Mapping\TimeStampType
             uuid: Ramsey\Uuid\Doctrine\UuidType
+            jsonb: App\EventStorage\Infrastructure\Doctrine\Mapping\JsonBType
 
         profiling_collect_backtrace: '%kernel.debug%'
     orm:

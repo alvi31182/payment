@@ -15,6 +15,7 @@ class GetPlayerAmountQueryProcessorTest extends TestCase
 {
     public function testGetPlayerAmount(): void
     {
+        dd(Uuid::uuid7()->toString());
         $readPaymentStorage = new TestReadPaymentStorage();
 
         $playerId = '018c688a-28b0-7264-9a95-dcf900a75dd9';

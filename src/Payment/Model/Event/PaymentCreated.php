@@ -22,4 +22,13 @@ final readonly class PaymentCreated implements DomainEvent
     {
         return new DateTimeImmutable();
     }
+
+    public function getData(): array
+    {
+        return [
+            'aggregateId' => $this->id,
+            'amount' => $this->amount,
+            'playerId' => $this->playerId
+        ];
+    }
 }

@@ -14,7 +14,7 @@ abstract class DomainEventRoot
     }
 
     /**
-     * @return array<array-key, mixed>
+     * @return array<array-key, DomainEvent>
      */
     public function pullDomainEvents(): array
     {

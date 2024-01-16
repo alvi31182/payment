@@ -24,8 +24,14 @@ services:
     App\Notify\Infrastructure\Transport\KafkaTransportFactory:
         tags: [messenger.transport_factory]
 
+    React\EventLoop\StreamSelectLoop: ~
+    React\EventLoop\LoopInterface: '@React\EventLoop\StreamSelectLoop'
+
     App\Payment\Application\Listener\ActionListener:
         arguments:
             $secretKey: '%jwt.secret.key%'
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 20}
+
+#    async.eventListener:
+#        class:
