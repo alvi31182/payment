@@ -8,10 +8,10 @@ use App\Payment\Application\Command\CreatePaymentDepositCommand;
 use App\Payment\Application\Converter\Money\MoneyConverter;
 use App\Payment\Infrastructure\Persistence\TransactionProcessor;
 use App\Payment\Model\Event\AsyncEventDispatcherInterface;
-use App\Payment\Model\Event\AsyncEventDispatcher;
 use App\Payment\Model\Payment;
 use App\Payment\Model\ReadPaymentStorage;
 use App\Payment\Model\WritePaymentStorage;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
 use Throwable;
 
@@ -32,15 +32,11 @@ final readonly class PaymentDepositCreateProcessor
         $payment = Payment::createDeposit(command: $command, pennies: $pennies);
         if (!$player) {
             try {
-//                $this->transactionProcessor->transactional(
-//                    function () use ($command, $pennies): void {
-//                        $this->writePaymentStorage->createDeposit(
-//                            Payment::createDeposit(command: $command, pennies: $pennies)
-//                        );
-//                    }
-//                );
 
-                $this->eventDispatcher->dispatch(...$payment->pullDomainEvents());
+                foreach ($payment->pullDomainEvents() as $event){
+                    $this->eventDispatcher->dispatch($event);
+                }
+
             } catch (Throwable $exception) {
                 throw new RuntimeException(
                     $exception->getMessage()

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Payment\Model\Event\AsyncMessageHelper;
+use App\Payment\Model\Event\DomainEventCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -13,10 +15,18 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
+    private ?AsyncMessageHelper $asyncMessageHelper = null;
+    public function __construct(
+
+        string $environment,
+        bool $debug
+    )
+    {
+        parent::__construct($environment, $debug);
+    }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-
         $routes->import('../config/{routes}/' . $this->environment . '/*.yaml');
         $routes->import('../config/{routes}/*.yaml');
 
@@ -27,12 +37,10 @@ class Kernel extends BaseKernel
         }
     }
 
-    public function process(ContainerBuilder $container): void
+    public function build(ContainerBuilder $container): void
     {
-      //  dd($container->findTaggedServiceIds())l
+        $container->addCompilerPass(pass: new DomainEventCompilerPass($this->asyncMessageHelper));
     }
-
-
 
     protected function configureContainer(ContainerConfigurator $container): void
     {

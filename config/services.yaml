@@ -6,6 +6,8 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+   # _instanceof:
+
 
     App\:
         resource: '../src/'
@@ -20,6 +22,17 @@ services:
     App\Payment\Application\Listener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+
+
+#    async.event:
+#        async_bus: []
+
+    App\Payment\Model\Event\DomainEvent: ~
+
+#    App\Payment\Model\Event\AsyncEventCompilerPass:
+#        tags:
+#            - { name: async.event}
 
     App\Notify\Infrastructure\Transport\KafkaTransportFactory:
         tags: [messenger.transport_factory]

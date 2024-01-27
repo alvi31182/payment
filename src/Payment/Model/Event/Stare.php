@@ -10,25 +10,12 @@ use React\ChildProcess\Process;
 use React\Promise\PromiseInterface;
 use React\Promise\Deferred;
 
-class Stare implements AsyncListenerInterface
+#[AsyncEventHandler]
+class Stare
 {
-    public function handle(Deferred $deferred): PromiseInterface
+    public function __invoke(PaymentCreated $deferred): PromiseInterface
     {
-            return $deferred->promise()->then(
-                function (object $event){
-
-                    $eventStorage = $this->createEventStorage(
-                        $event::class,
-                        json_encode($event->getData(), JSON_THROW_ON_ERROR)
-                    );
-
-                    return $this->saveEventInChildProcess(eventStorage: $eventStorage);
-                }
-            )->catch(
-                onRejected: function (\Exception $exception){
-                    throw $exception;
-                }
-            );
+        dd($deferred);
     }
 
     private function createEventStorage(string $eventName, string $eventData): EventStorage
@@ -41,13 +28,16 @@ class Stare implements AsyncListenerInterface
     private function saveEventInChildProcess(EventStorage $eventStorage): PromiseInterface
     {
         $deferred = new Deferred();
-
+        $stdout = ''; // Инициализация переменной для вывода
+        $stderr = '';
         $serializedData = base64_encode(serialize($eventStorage));
+        $projectRoot = dirname(__DIR__, 4);
 
-        $cmd = sprintf('bin/console async:save %s', escapeshellarg('echo base64_decode("' . $serializedData . '");'));
-        $process = new Process($cmd,null,null);
+        $cmd = sprintf('bin/console ', $projectRoot);
+
+        $process = new Process('bin/console',null,null);
         $process->start();
-
+      //  dd($process);
 
         $process->stdout->on('data', function ($data) use (&$stdout) {
            // dd($data);
@@ -58,9 +48,16 @@ class Stare implements AsyncListenerInterface
             $stderr .= $data;
         });
 
-        $process->on('exit', function ($exitCode) use ($deferred, &$stdout, &$stderr) {
+        $process->stdin->write($serializedData);
+        $process->stdin->end();
 
-        //dd($stdout);
+        $process->on('exit', function ($code, $term) use ($deferred, &$stdout, &$stderr) {
+
+            if ($term === null) {
+                echo 'exit with code ' . $code . PHP_EOL;
+            } else {
+                echo 'terminated with signal ' . $term . PHP_EOL;
+            }
         });
 
 
@@ -68,7 +65,8 @@ class Stare implements AsyncListenerInterface
         $process->on('error', function (\Exception $e) use ($deferred) {
             $deferred->reject($e);
         });
-        $process->emit('sss');
+
+        $process->stdin->end();
         return $deferred->promise();
     }
 }

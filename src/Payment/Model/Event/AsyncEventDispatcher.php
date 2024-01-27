@@ -7,24 +7,31 @@ namespace App\Payment\Model\Event;
 use React\EventLoop\LoopInterface;
 use React\Promise\Deferred;
 
-readonly class AsyncEventDispatcher implements AsyncEventDispatcherInterface
+class AsyncEventDispatcher implements AsyncEventDispatcherInterface
 {
+    private array $listeners = [];
     public function __construct(
-        private LoopInterface $loop,
+        private readonly LoopInterface $loop,
         private AsyncListenerInterface $listener
     ) {
     }
 
-    public function dispatch(DomainEvent $domainEvent): void
+    public function dispatch(object $event): void
     {
         $deferred = new Deferred();
-        $deferred->resolve($domainEvent);
+        $deferred->resolve($event);
 
         $this->loop->futureTick(function () use ($deferred): void {
-            $this->listener->handle($deferred);
+            $this->executeListeners($deferred);
         });
 
         $this->loop->run();
         $this->loop->stop();
+    }
+
+
+    private function executeListeners(Deferred $deferred): void
+    {
+        $this->listener->publish($deferred->promise());
     }
 }

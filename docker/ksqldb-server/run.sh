@@ -9,8 +9,7 @@ $CONFLUENT_HUB install confluentinc/kafka-connect-jdbc:10.7.4 \
   --component-dir $COMPONENT_DIR \
   --worker-configs $CONNECT_PROPS \
   --no-prompt
-#
-## install the elasticsearch connector
+
 #$CONFLUENT_HUB install debezium/debezium-connector-postgresql:2.2.1 \
 #    --component-dir $COMPONENT_DIR \
 #    --worker-configs $CONNECT_PROPS \

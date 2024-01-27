@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Payment\Model\Event;
 
-use React\Promise\PromiseInterface;
+use DateTimeImmutable;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 interface AsyncEventDispatcherInterface
 {
-    public function dispatch(DomainEvent $domainEvent): void;
+    /**
+     * @param object{occuredOn: DateTimeImmutable} $event
+     */
+    public function dispatch(object $event): void;
 }
