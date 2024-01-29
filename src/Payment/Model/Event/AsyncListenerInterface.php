@@ -11,5 +11,4 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 interface AsyncListenerInterface
 {
-    public function publish(PromiseInterface $promise): PromiseInterface;
 }

@@ -6,14 +6,15 @@ namespace App\Payment\Model\Event;
 
 use App\EventStorage\Application\Command\AppendEventCommand;
 use App\EventStorage\Model\EventStorage;
+use App\Payment\Model\Event\Handler\EventHandlerInterface;
 use React\ChildProcess\Process;
 use React\Promise\PromiseInterface;
 use React\Promise\Deferred;
 
 #[AsyncEventHandler]
-class Stare
+class Stare implements EventHandlerInterface
 {
-    public function __invoke(PaymentCreated $deferred): PromiseInterface
+    public function handle(Deferred $deferred): PromiseInterface
     {
         dd($deferred);
     }

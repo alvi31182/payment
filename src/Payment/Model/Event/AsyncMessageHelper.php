@@ -18,7 +18,7 @@ final class AsyncMessageHelper
 {
     public const ASYNC_MESSAGE_HANDLER_ATTRIBUTE = '\\App\\Payment\\Model\\Event\\AsyncEventHandler';
 
-    public string $messengerTagName = 'async.message_handle';
+    public string $messengerTagName = 'async.handler';
     public function __construct(
         private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
         private readonly AttributeArrayNameInliner $attributeArrayNameInliner,

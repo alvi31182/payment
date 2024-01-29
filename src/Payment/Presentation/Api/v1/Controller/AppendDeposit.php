@@ -40,7 +40,6 @@ final class AppendDeposit extends AbstractController
             )
         )
     )]
-    #[Security(name: "ApiKeyAuth")]
     public function appendDeposit(
         #[MapRequestPayload(
             resolver: AppendDepositValueResolver::class

@@ -11,8 +11,4 @@ use React\Promise\PromiseInterface;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::IS_REPEATABLE)]
 class AsyncEventHandler implements AsyncListenerInterface
 {
-    public function publish(PromiseInterface $promise): PromiseInterface
-    {
-        return $promise;
-    }
 }

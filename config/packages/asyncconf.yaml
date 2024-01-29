@@ -1,63 +1,56 @@
 services:
+  _instanceof:
+      App\Payment\Model\Event\Bus\AsyncMessageBusInterface:
+        tags: ['async.bus']
 
-#  _instanceof:
-#      App\Payment\Model\Event\Bus\CommandAsyncBus:
-#        tags:
-#          - { name: async.message_handler, bus: command.bus }
+  #  _instanceof:
+  #      App\Payment\Model\Event\Bus\CommandAsyncBus:
+  #        tags:
+  #          - { name: async.message_handler, bus: command.bus }
 
   react:
     class: React\Promise\PromiseInterface
 
+  async.event_bus:
+    class: App\Payment\Model\Event\AsyncEventDispatcher
+    arguments:
+      [ '@React\EventLoop\StreamSelectLoop', '@async.bus' ]
+    tags:
+      - { name: 'async.event_dispatcher',  }
 
-
-
-
-  App\Payment\Model\Event\AsyncEventHandler:
+  async.event_dispatcher:
+      class: App\Payment\Model\Event\AsyncEventDispatcherInterface
       tags:
-        - { name: 'async.handler'}
+        - { name: 'async.event_dispatcher', method: 'dispatch' }
+
+  App\Payment\Model\Event\AsyncListenerInterface:
+    class: App\Payment\Model\Event\AsyncEventHandler
+    tags:
+      - { name: 'async.message_handler',  handles: [ App\Payment\Model\Event\AsyncEventHandler ], asyncBus: 'async.bus'}
 
   async.message_handler:
-      class: App\Payment\Model\Event\AsyncListenerInterface
-      calls:
-        - publish: [ '@react' ]
-      tags: [ 'async.handler' ]
+    class: App\Payment\Model\Event\AsyncEventHandler
+    tags:
+      - { name: 'async.message_handler'  }
+
+
   #
-#  App\Payment\Model\Event\AsyncListenerInterface:
-#    calls:
-#      - publish: [ '@react' ]
-#    tags:
-#        - { name: 'async.message_handler', handler: 'e'}
+  #  App\Payment\Model\Event\AsyncListenerInterface:
+  #    calls:
+  #      - publish: [ '@react' ]
+  #    tags:
+  #        - { name: 'async.message_handler', handler: 'e'}
 
 
   async.service_locator:
     class: App\Payment\Model\Event\Locator\AsyncLocator
-  #
-#  event:
-#    class: App\Payment\Model\Event\DomainEvent
-#
-#  async.service_locator:
-#    class: App\Payment\Model\Event\Locator\AsyncLocator
-#
-#  async.event_subscriber:
-#    class: App\Payment\Model\Event\AsyncEventHandler
-#
-#  App\Payment\Model\Event\AsyncListenerInterface:
-#    calls:
-#      - publish: ['@react']
-#    tags: ['async.message_handler']
-#
+
+  App\Payment\Model\Event\Bus\AsyncMessageBus:
+    tags:
+      - {name: 'async.bus', alias: 'www'}
+
   async.bus:
     class: App\Payment\Model\Event\Bus\AsyncMessageBusInterface
-#
-#  async.message_bus:
-#    class: App\Payment\Model\Event\AsyncEventDispatcher
-#    tags: ['async.bus']
-#    arguments:
-#      [ '@React\EventLoop\StreamSelectLoop', '@App\Payment\Model\Event\AsyncListenerInterface' ]
-
-
-#  App\Payment\Model\Event\AsyncListenerInterface:
-#    calls:
-#      - publish: ['@event','@react']
-#    tags: ['async.message_handler','async.event_subscriber']
+    tags:
+      - {name: 'async.bus',  method: 'bus'}
 
