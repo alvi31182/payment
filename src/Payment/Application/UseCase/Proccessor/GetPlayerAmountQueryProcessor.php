@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Payment\Application\UseCase\Get;
+namespace App\Payment\Application\UseCase\Proccessor;
 
 use App\Payment\Application\Query\GetPlayerAmountQuery;
 use App\Payment\Application\Response\PlayerAmount;

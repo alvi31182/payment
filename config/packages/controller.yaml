@@ -1,0 +1,2 @@
+#App\Payment\Presentation\Api\v1\Controller\Registration:
+#  tags: ['controller.argument_value_resolver']

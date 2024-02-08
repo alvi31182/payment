@@ -6,10 +6,9 @@ namespace App\Tests\Payment\Application\UseCase\Get;
 
 use App\Payment\Application\Query\GetPlayerAmountQuery;
 use App\Payment\Application\Response\PlayerAmount;
-use App\Payment\Application\UseCase\Get\GetPlayerAmountQueryProcessor;
+use App\Payment\Application\UseCase\Proccessor\GetPlayerAmountQueryProcessor;
 use App\Tests\Payment\Model\TestReadPaymentStorage;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 
 class GetPlayerAmountQueryProcessorTest extends TestCase
 {

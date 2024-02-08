@@ -17,9 +17,9 @@
         "symfony/routing": "v7.0.3",
         "symfony/config": "v7.0.3",
         "symfony/dotenv": "v7.0.3",
-        "doctrine/doctrine-bundle": "^2.11",
+        "doctrine/doctrine-bundle": "v2.11.1",
         "doctrine/doctrine-migrations-bundle": "^3.3",
-        "doctrine/orm": "^2.18.0",
+        "doctrine/orm": "^3.0",
         "doctrine/annotations": "^2.0",
         "doctrine/common": "^3.4",
         "nelmio/api-doc-bundle": "v4.16.0",
@@ -33,7 +33,8 @@
         "firebase/php-jwt": "^6.10",
         "symfony/serializer": "v7.0.3",
         "symfony/messenger": "v7.0.3",
-        "kwn/php-rdkafka-stubs": "^2.2"
+        "kwn/php-rdkafka-stubs": "^2.2",
+        "symfony/security-bundle": "v7.0.3"
     },
     "config": {
         "allow-plugins": {

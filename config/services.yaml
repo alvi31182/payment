@@ -1,21 +1,118 @@
+
 parameters:
     jwt.secret.key: '%env(JWT_SECRET_KEY)%'
 
 services:
 
     _defaults:
-        autowire: true
-        autoconfigure: true
+        autowire: false
+        autoconfigure: false
+        public: false
 
-    App\:
-        resource: '../src/'
-        exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Kernel.php'
+    App\Payment\Application\UseCase\TokenOperation\JwtTokenGenerator:
+        public: true
+
+    App\Payment\Application\UseCase\TokenOperation\JwtTokenDecoder:
+        public: true
+
+    App\Payment\Application\UseCase\TokenOperation\JwtTokenValidator:
+        public: true
+        arguments:
+          [
+            '@App\Payment\Model\ReadPaymentStorage',
+            '@App\Payment\Application\UseCase\TokenOperation\JwtTokenDecoder'
+          ]
+    App\Authenticator\Application\Handler\AccessTokenHandler:
+        public: true
+        arguments:
+          [ '@App\Authenticator\Domain\ReadAccountStorage' ]
+
+    App\Payment\Infrastructure\Persistence\TransactionProcessor:
+        public: true
+        class: App\Payment\Infrastructure\Persistence\TransactionManager
+        arguments:
+          [ '@doctrine.orm.default_entity_manager' ]
+
+    App\Authenticator\Application\Resolver\RegistrationResolver:
+        public: true
+        tags: ['controller.argument_value_resolver']
+
+    App\Payment\Application\UseCase\Authorization\Authorize:
+        public: true
+        arguments:
+          [
+              '@App\Payment\Application\UseCase\TokenOperation\JwtTokenGenerator',
+              '@App\Payment\Application\UseCase\TokenOperation\JwtTokenValidator'
+          ]
+
+    App\Authenticator\Application\Handler\RegistrationHandler:
+        public: true
+        arguments:
+          [
+              '@App\Authenticator\Domain\UserWriteStorage',
+              '@App\Authenticator\Domain\WriteAccountProfile',
+              '@App\Payment\Infrastructure\Persistence\TransactionProcessor'
+          ]
+
+
+    App\Authenticator\Domain\UserWriteStorage:
+        public: true
+        class: App\Authenticator\Infrastructure\Doctrine\Repository\AccountRepository
+        arguments:
+          [ '@doctrine.orm.default_entity_manager' ]
+
+    App\Payment\Model\ReadPaymentStorage:
+        public: true
+        class: App\Payment\Infrastructure\Doctrine\Repository\PaymentRepository
+        arguments:
+          [
+              '@App\Payment\Infrastructure\Doctrine\Repository\NativeSqlQueryForPaymentTable',
+              '@doctrine.orm.default_entity_manager'
+          ]
+
+    App\Payment\Presentation\Api\v1\Controller\Registration:
+        public: true
+        tags:
+            - { name: 'controller.service_arguments'}
+
+#    App\Payment\Presentation\Api\v1\Controller\AppendDeposit:
+#        public: true
+#        arguments:
+#          [ 'A' ]
+
+    App\Payment\Infrastructure\Doctrine\Repository\NativeSqlQueryForPaymentTable:
+        public: true
+        arguments:
+          [ '@doctrine.orm.default_entity_manager', '@logger' ]
+
+    App\Authenticator\Domain\WriteAccountProfile:
+        public: true
+        class: App\Authenticator\Infrastructure\Doctrine\Repository\AccountProfileRepository
+        arguments:
+          [ '@doctrine.orm.default_entity_manager' ]
+
+    App\Authenticator\Application\ApiKeyAuth\JwtLoginProvider:
+        public: true
+        arguments:
+          [ '@App\Authenticator\Domain\ReadAccountStorage' ]
+
+    App\Authenticator\Application\ApiKeyAuth\ApiKeyAuthenticator:
+        tags:
+            - {name: 'security.listener.user_provider'}
 
     App\Payment\Model\WritePaymentStorage:
+        public: true
         class: App\Payment\Infrastructure\Doctrine\Repository\PaymentRepository
+        arguments:
+          [
+              '@App\Payment\Infrastructure\Doctrine\Repository\NativeSqlQueryForPaymentTable',
+              '@doctrine.orm.default_entity_manager'
+          ]
+
+    App\Authenticator\Domain\ReadAccountStorage:
+        class: App\Authenticator\Infrastructure\Doctrine\Repository\ReadRepository
+        arguments:
+          [ '@doctrine.orm.default_entity_manager', '@logger' ]
 
     App\Payment\Application\Listener\ExceptionListener:
         tags:
@@ -23,9 +120,15 @@ services:
 
     App\Notify\Infrastructure\Transport\KafkaTransportFactory:
         tags: [messenger.transport_factory]
+        arguments:
+          [ '@logger' ]
 
     App\Payment\Application\Listener\ActionListener:
         arguments:
             $secretKey: '%jwt.secret.key%'
+            $authorize: '@App\Payment\Application\UseCase\Authorization\Authorize'
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 20}
+#
+#imports:
+#    - { resource: packages/controller.yaml }

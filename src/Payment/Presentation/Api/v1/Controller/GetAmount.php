@@ -7,7 +7,7 @@ namespace App\Payment\Presentation\Api\v1\Controller;
 use App\Payment\Application\Query\GetPlayerAmountQuery;
 use App\Payment\Application\Request\GetPlayerAmountRequest;
 use App\Payment\Application\RequestResolver\GetPlayerAmountResolver;
-use App\Payment\Application\UseCase\Get\GetPlayerAmountQueryProcessor;
+use App\Payment\Application\UseCase\Proccessor\GetPlayerAmountQueryProcessor;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

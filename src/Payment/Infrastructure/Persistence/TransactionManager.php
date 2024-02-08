@@ -32,7 +32,9 @@ readonly class TransactionManager implements TransactionProcessor
             $this->entityManager->commit();
         } catch (Throwable $exception) {
             $this->entityManager->rollback();
-            throw new RuntimeException($exception->getMessage());
+            throw new RuntimeException(
+                $exception->getMessage(),
+            );
         } finally {
             $this->entityManager->clear();
         }

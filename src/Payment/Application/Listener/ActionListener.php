@@ -26,7 +26,7 @@ final readonly class ActionListener
 
         $request = $event->getRequest();
 
-        $token = $request->headers->get('Authorization');
+        $token = $request->headers->get('Authorizations');
 
         if ($token === null) {
             return;
